@@ -2,6 +2,7 @@ import random
 import httpx
 
 from web3 import Web3
+from decimal import Decimal
 
 from constans import AMOUNT_IN_WEI, NETWORK_CONFIG
 
@@ -27,7 +28,6 @@ def data_maker(rooute, amount: str, amount_without_fee, wallet_address):
 
 
 async def get_estimate_gas(url, headers, amount, from_network, to_network):
-
     payload = {
         "fromAsset": "eth",
         "toAsset": "eth",
@@ -53,7 +53,6 @@ async def get_estimate_gas(url, headers, amount, from_network, to_network):
         else:
             raise httpx.HTTPStatusError(f"Request failed with status code: {response.status_code}",
                                         request=response.request, response=response)
-
 
 
 def get_random_network_data_new(my_dict=None):
@@ -101,4 +100,29 @@ def get_random_network_data_new(my_dict=None):
         "random_value": my_dict[random_key],
         "chain_identifier": None
     }
+
+
+def load_private_key_from_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            private_key = file.read().strip()
+            if not private_key:
+                raise ValueError("Private key file is empty")
+            return private_key
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Private key file '{file_path}' not found.")
+    except Exception as e:
+        raise RuntimeError(f"Error loading private key: {e}")
+
+
+def get_balance(rpc, private_key):
+    w3 = Web3(Web3.HTTPProvider(rpc))
+    wallet_address = w3.eth.account.from_key(private_key).address
+    balance = w3.eth.get_balance(wallet_address)
+    balance_in_ether = Decimal(w3.from_wei(balance, 'ether'))
+    normal_balance = float(balance_in_ether)
+    rounded_balance = round(normal_balance / 10, 2)
+    print(f"Balance after division: {rounded_balance} Ether")
+    print(f"Balance in wei after division: {Web3.to_wei(rounded_balance, "ether")}")
+    return Web3.to_wei(rounded_balance, "ether")
 
