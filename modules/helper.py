@@ -123,6 +123,6 @@ def get_balance(rpc, private_key):
     normal_balance = float(balance_in_ether)
     rounded_balance = round(normal_balance / 10, 2)
     print(f"Balance after division: {rounded_balance} Ether")
-    print(f"Balance in wei after division: {Web3.to_wei(rounded_balance, "ether")}")
+    print(f"Balance in wei after division: {Web3.to_wei(rounded_balance, 'ether')}")
     return Web3.to_wei(rounded_balance, "ether")
 
