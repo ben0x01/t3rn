@@ -3,7 +3,7 @@ import os
 AMOUNT_IN_WEI = 1 * 10 ** 18
 AMOUNT_IN_GWEI = 1 * 10 ** 9
 
-PRIVATE_KEYS_PATH = os.path.abspath("private_keys.txt")
+PRIVATE_KEYS_PATH = os.path.abspath("private_keys")
 
 NETWORK_CONFIG = {
     "ARB": {
